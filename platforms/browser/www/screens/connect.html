@@ -1,0 +1,54 @@
+<div id="menu-container" class="subpage screen-connect">
+	<ul class="connections">
+
+	</ul>
+</div>
+<script>
+	bluetoothSerial.isEnabled(function() {
+		bluetoothSerial.list(function(devs) {
+			devs.forEach(function(dev) {
+				$('.connections').append('<li data-name="'+dev.name+'" data-addr="'+dev.address+'"><span class="status-circle '+(app.pageData.mac && app.pageData.mac == dev.address ? 'status-connection-good' : '')+'"></span><b>Name: '+dev.name+'</b> - '+dev.address+'</li>');
+		        console.log(dev);
+		    });
+		    $('.connections > li').on('touchstart', handleConnect);
+		}, function() {
+			console.log("Failed to get devices");
+		});
+	}, function() {
+		console.log("bluetooth is not enabled!");
+		app.loadPrevScreen();
+	});
+
+	var connecting = false;
+	function handleConnect(e) {
+		if(connecting)
+			return;
+
+		$('.status-connection-good,.status-connection-bad').removeClass('status-connection-good').removeClass('status-connection-bad');
+
+		if(app.pageData.mac && app.pageData.mac == $(this).attr('data-addr')) {
+			console.log("Disconnect from device: "+app.pageData.mac)
+			bluetoothSerial.disconnect();
+			app.pageData.mac = undefined;
+			return;
+		}
+
+		connecting = true;
+		
+		console.log("Clicked - "+$(this).attr('data-name'));
+		var item = $(this);
+		item.find('.status-circle').addClass('status-connection-connecting');
+
+		bluetoothSerial.connect($(this).attr('data-addr'), function() {
+			item.find('.status-circle').removeClass('status-connection-connecting').addClass('status-connection-good');
+			connecting = false;
+			console.log("Connected succesfully");
+			app.pageData.mac = item.attr('data-addr');
+			app.loadNewSubpage('control');
+		}, function() {
+			item.find('.status-circle').removeClass('status-connection-connecting').addClass('status-connection-bad');
+			connecting = false;
+			console.log("Connection failed");
+		});
+	}
+</script>

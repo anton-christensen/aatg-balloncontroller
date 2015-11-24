@@ -1,0 +1,119 @@
+<div id="menu-container" class="subpage screen-control">
+	<div class="sensorbox">
+		<div class="indicator-container"><div class="indicator-value T1"></div></div>
+		<div class="indicator-container"><div class="indicator-value T2"></div></div>
+		<div class="indicator-container"><div class="indicator-value D1"></div></div>
+		<div class="indicator-container"><div class="indicator-value P1"></div></div>
+		<span class="sensor T1"></span>
+		<span class="sensor T2"></span>
+		<span class="sensor D1"></span>
+		<span class="sensor P1"></span>
+	</div>
+
+	<div class="bottom">
+		<div class="border"></div>
+		<div class="controllerbox">
+			<input type="checkbox" class="controller stop" 		data-role="none" id="c1" />
+			<label data-role="none" for="c1"><span></span></label>
+			<input type="checkbox" class="controller record" 	data-role="none" id="c2" />
+			<label data-role="none" for="c2"><span></span></label>
+			<input type="checkbox" class="controller payload" 	data-role="none" id="c3" />
+			<label data-role="none" for="c3"><span></span></label>
+		</div>
+		<div class="controllerbox">
+			<div class="controller fire"></div>
+		</div>
+	</div>
+</div>
+<script>
+$('.logo').attr("onclick","app.loadFirstSubpage()");
+
+var fireState = 0;
+$('.controller.fire').on('touchstart', 	function() {
+	if($('.controller.stop').prop("checked") != true)
+		bluetoothSerial.write("S1:80 ");
+	if(++fireState==1){
+		$(this).addClass('on');
+	}
+});
+$('.controller.fire').on('touchend',	function() {
+	if(--fireState==0) {
+		if($('.controller.stop').prop("checked") != true)
+			bluetoothSerial.write("S1:50 ");
+		$(this).removeClass('on');
+	}
+});
+$('.controller[type="checkbox"]').on('change', function() {
+	if($(this).hasClass('stop') == true)
+		if($(this).prop("checked") == true)
+			bluetoothSerial.write("S1:35 ");
+		else if($('.controller.fire.on').length)
+			bluetoothSerial.write("S1:80 ");
+		else
+			bluetoothSerial.write("S1:50 ");
+	else if($(this).hasClass('payload') == true)
+		if($(this).prop("checked") == true)
+			bluetoothSerial.write("S2:100 ");
+		else
+			bluetoothSerial.write("S2:25 ");
+});
+bluetoothSerial.subscribe('\n', function(data) {
+	var dataarr = /(([TDPS])([1-2])):(\d+)/.exec(data);
+	if(dataarr && dataarr.length == 5) {
+		switch(dataarr[2]) {
+			case 'T':
+
+					if(dataarr[3] == '1') {
+						var val = Math.round(((dataarr[4]*0.84)-402.03)*100)/100;
+						$('.sensor.'+dataarr[1]).html(val + "°C");
+					}
+					else if(dataarr[3] == '2') {
+						var val = Math.round((((dataarr[4]-5)*0.84)-402.03)*100)/100;
+						$('.sensor.'+dataarr[1]).html(val + "°C");
+					}
+					$('.indicator-value.'+dataarr[1]).css('height', ((val-15)*100)/(350-15)+"%"); // ca.15 degrees to 350 degrees mapping
+
+				break;
+			case 'D':
+				// distance per voltage factor
+				var k = 4983/512;
+				var val = Math.round((((dataarr[4]*2560)/512)*2.54)/k);
+				$('.sensor.'+dataarr[1]).html(val + "cm"); // inches to cm
+				$('.indicator-value.'+dataarr[1]).css('height', val*100/600+"%");
+				break;
+			case 'P':
+				var val = dataarr[4]*(9.25/1023)
+				$('.sensor.'+dataarr[1]).html(Math.round(val*100)/100 + "V");
+				if(val <= 6)
+					$('.sensor.'+dataarr[1]).addClass('red');
+				else
+					$('.sensor.'+dataarr[1]).removeClass('red');
+				$('.indicator-value.'+dataarr[1]).css('height', (val-5)*(100/4)+"%");
+				break;
+			case 'S':
+				break;
+			default:
+				console.log(data);
+				break;
+		}
+	}
+	else
+		console.log(data);
+
+});
+app.conTLoop = setInterval(function() {
+	if($('.controller.stop').prop("checked") == true)
+		bluetoothSerial.write("S1:35 "); // close gas supply for helper flame
+	else if(fireState)
+		bluetoothSerial.write("S1:80 "); // open primary flame supply
+	else
+		bluetoothSerial.write("S1:50 "); // default inactive possition
+
+
+	if($('.controller.payload').prop("checked") == true)
+		bluetoothSerial.write("S2:100 ");
+	else
+		bluetoothSerial.write("S2:25 ");
+
+}, 900);
+</script>

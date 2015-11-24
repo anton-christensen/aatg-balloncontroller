@@ -1,0 +1,2 @@
+/home/anton/Dropbox/projects/ballonControllerAndroid/platforms/android/build/intermediates/classes/debug
+/home/anton/Dropbox/projects/ballonControllerAndroid/platforms/android/build/intermediates/pre-dexed/debug/classes-d8385819dca67fab4f29a66bf00e5c7b3c15b248.jar

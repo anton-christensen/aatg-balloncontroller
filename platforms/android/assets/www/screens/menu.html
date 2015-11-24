@@ -1,0 +1,23 @@
+<div data-role="main" class="ui-content theme-gradient fill">
+	<div class="menu-header">
+		<span class="logo"></span><!-- <span class="menu-button right icon-close"></span> -->
+	</div>
+	<div class="subpage-container">
+		<div id="menu-container" class="subpage">
+			<ul class="bold">
+				<li onclick="app.loadNewSubpage('connect')">Connect</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<script>
+$('.logo').attr("onclick","");
+// if(app.isos("ios"))
+// 	$('.menu-button.right').hide();
+// else
+// 	$('.menu-button.right').attr('onclick', 'window.navigator.app.exitApp()');
+
+bluetoothSerial.isConnected(function() {
+	$('#menu-container > ul').append('<li onclick="app.loadNewSubpage(\'control\')">Control</li>');
+});
+</script>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/anton/Dropbox/projects/ballonControllerAndroid/platforms/android/build/intermediates/exploded-aar/android/CordovaLib/unspecified/debug/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="a589f38637a2dba5a8694d431ced50b2c4649679">
+        <dex dex="/home/anton/Dropbox/projects/ballonControllerAndroid/platforms/android/build/intermediates/pre-dexed/debug/classes-d8385819dca67fab4f29a66bf00e5c7b3c15b248.jar" />
+    </item>
+
+</items>

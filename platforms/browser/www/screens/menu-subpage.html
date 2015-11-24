@@ -1,0 +1,12 @@
+<div id="menu-container" class="subpage">
+	<ul class="bold">
+		<li onclick="app.loadNewSubpage('connect')">Connect</li>
+	</ul>
+</div>
+<script>
+
+clearInterval(app.conTLoop);
+bluetoothSerial.isConnected(function() {
+	$('#menu-container > ul').append('<li onclick="app.loadNewSubpage(\'control\')">Control</li>');
+});
+</script>

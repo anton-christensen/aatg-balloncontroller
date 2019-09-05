@@ -2,7 +2,7 @@
 <widget id="net.antonchristensen.balloncontroller" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>AATG - Ballon Controller</name>
     <description>Hello World sample application that responds to the deviceready event.</description>
-    <author email="anton.christensen9700@gmail.com" >Anton Christensen</author>
+    <author email="anton.christensen9700@gmail.com">Anton Christensen</author>
     <content src="index.html" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="default" />
@@ -20,12 +20,10 @@
     <preference name="android-minSdkVersion" value="26" />
     <preference name="android-installLocation" value="auto" />
     <preference name="keepRunning" value="false" />
-    <gap:plugin name="org.apache.cordova.device-orientation" />
     <gap:plugin name="org.apache.cordova.dialogs" />
     <gap:plugin name="org.apache.cordova.file" />
     <gap:plugin name="org.apache.cordova.file-transfer" />
     <gap:plugin name="com.megster.cordova.bluetoothserial" version="0.2.2" />
-    <!-- <plugin name="cordova-plugin-whitelist" version="1" /> -->
     <icon src="icon.png" />
     <icon gap:platform="android" gap:qualifier="ldpi" src="www/res/icon/android/icon-36-ldpi.png" />
     <icon gap:platform="android" gap:qualifier="mdpi" src="www/res/icon/android/icon-48-mdpi.png" />

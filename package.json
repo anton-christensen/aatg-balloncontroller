@@ -1,0 +1,15 @@
+{
+  "name": "net.antonchristensen.balloncontroller",
+  "version": "1.0.0",
+  "displayName": "AATG - Ballon Controller",
+  "cordova": {
+    "platforms": [
+      "android",
+      "browser"
+    ]
+  },
+  "dependencies": {
+    "cordova-android": "^4.0.0",
+    "cordova-browser": "^3.6.0"
+  }
+}
